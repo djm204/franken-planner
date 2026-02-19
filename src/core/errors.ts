@@ -29,3 +29,14 @@ export class RecursionDepthExceededError extends Error {
     Object.setPrototypeOf(this, RecursionDepthExceededError.prototype);
   }
 }
+
+export class RationaleRejectedError extends Error {
+  constructor(
+    public readonly taskId: string,
+    public readonly rejectionReason: string
+  ) {
+    super(`Rationale rejected for task '${taskId}': ${rejectionReason}`);
+    this.name = 'RationaleRejectedError';
+    Object.setPrototypeOf(this, RationaleRejectedError.prototype);
+  }
+}
