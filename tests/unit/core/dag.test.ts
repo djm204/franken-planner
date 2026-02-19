@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { PlanGraph } from '../../../src/core/dag';
+import { PlanGraph, createPlanVersion } from '../../../src/core/dag';
 import { CyclicDependencyError, DuplicateTaskError, TaskNotFoundError } from '../../../src/core/errors';
 import { createTaskId } from '../../../src/core/types';
 import type { Task } from '../../../src/core/types';
@@ -256,6 +256,17 @@ describe('PlanGraph — versioning', () => {
 });
 
 // ─── Clone ───────────────────────────────────────────────────────────────────
+
+describe('createPlanVersion', () => {
+  it('wraps a graph with a reason and timestamp', () => {
+    const g = PlanGraph.empty().addTask(makeTask('a'));
+    const pv = createPlanVersion(g, 'test snapshot');
+    expect(pv.version).toBe(g.version);
+    expect(pv.graph).toBe(g);
+    expect(pv.reason).toBe('test snapshot');
+    expect(pv.timestamp).toBeInstanceOf(Date);
+  });
+});
 
 describe('PlanGraph — clone', () => {
   it('produces an equivalent graph', () => {
