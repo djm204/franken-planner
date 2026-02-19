@@ -88,7 +88,6 @@ describe('LinearPlanner — failure handling', () => {
     const graph = PlanGraph.empty()
       .addTask(makeTask('t-1'))
       .addTask(makeTask('t-2'), [createTaskId('t-1')]);
-    const err = new Error('task exploded');
     const executor = vi.fn().mockResolvedValueOnce(success('t-1')).mockResolvedValueOnce(failure('t-2', 'task exploded'));
 
     const result = await new LinearPlanner().execute(graph, { executor });

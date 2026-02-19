@@ -7,8 +7,8 @@ export class LinearPlanner implements PlanningStrategy {
 
   /**
    * Executes tasks one-by-one in topological order.
-   * Returns 'completed' when all tasks succeed.
-   * Failure handling added in next commit.
+   * Stops on the first failure and returns a 'failed' PlanResult.
+   * All results accumulated up to and including the failing task are preserved.
    */
   async execute(graph: PlanGraph, context: PlanContext): Promise<PlanResult> {
     const tasks = graph.topoSort();
@@ -17,6 +17,15 @@ export class LinearPlanner implements PlanningStrategy {
     for (const task of tasks) {
       const result = await context.executor(task);
       taskResults.push(result);
+
+      if (result.status === 'failure') {
+        return {
+          status: 'failed',
+          taskResults,
+          failedTaskId: task.id,
+          error: result.error,
+        };
+      }
     }
 
     return { status: 'completed', taskResults };
