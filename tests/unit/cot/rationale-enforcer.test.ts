@@ -57,13 +57,12 @@ describe('RationaleEnforcer', () => {
     expect(rationale.selectedTool).toBeUndefined();
   });
 
-  it('each call produces a fresh timestamp', async () => {
+  it('each call produces a new timestamp object', () => {
     const task = makeTask('t-1');
     const enforcer = new RationaleEnforcer();
     const r1 = enforcer.generate(task);
-    await new Promise((resolve) => setTimeout(resolve, 2));
     const r2 = enforcer.generate(task);
-    // timestamps should be equal or later (may be same ms in fast machines)
-    expect(r2.timestamp.getTime()).toBeGreaterThanOrEqual(r1.timestamp.getTime());
+    // each call must create a distinct Date — not the same reference
+    expect(r1.timestamp).not.toBe(r2.timestamp);
   });
 });
