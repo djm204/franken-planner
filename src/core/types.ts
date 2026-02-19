@@ -62,3 +62,30 @@ export type PlanResult =
   | { status: 'failed'; taskResults: TaskResult[]; failedTaskId: TaskId; error: Error }
   | { status: 'aborted'; reason: string }
   | { status: 'rationale_rejected'; taskId: TaskId };
+
+// =============================================================================
+// Intent (sanitized input from MOD-01)
+// =============================================================================
+
+export interface Intent {
+  goal: string;
+  strategy?: PlanningStrategyName;
+  context?: Record<string, unknown>;
+}
+
+// =============================================================================
+// Chain-of-Thought (CoT)
+// =============================================================================
+
+/** Rationale block emitted before every task dispatch, verified by MOD-07. */
+export interface RationaleBlock {
+  taskId: TaskId;
+  reasoning: string;
+  selectedTool?: string;
+  expectedOutcome: string;
+  timestamp: Date;
+}
+
+export type VerificationResult =
+  | { verdict: 'approved' }
+  | { verdict: 'rejected'; reason: string };
