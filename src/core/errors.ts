@@ -21,3 +21,11 @@ export class DuplicateTaskError extends Error {
     Object.setPrototypeOf(this, DuplicateTaskError.prototype);
   }
 }
+
+export class RecursionDepthExceededError extends Error {
+  constructor(depth: number) {
+    super(`Recursion depth ${depth} exceeded maximum`);
+    this.name = 'RecursionDepthExceededError';
+    Object.setPrototypeOf(this, RecursionDepthExceededError.prototype);
+  }
+}
