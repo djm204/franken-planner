@@ -89,3 +89,29 @@ export interface RationaleBlock {
 export type VerificationResult =
   | { verdict: 'approved' }
   | { verdict: 'rejected'; reason: string };
+
+// =============================================================================
+// Memory types (MOD-03 Semantic & Episodic Memory)
+// =============================================================================
+
+export type ADRStatus = 'proposed' | 'accepted' | 'deprecated' | 'superseded';
+
+export interface ADR {
+  id: string;
+  title: string;
+  status: ADRStatus;
+  decision: string;
+}
+
+/** A known error pattern with a suggested fix, stored in MOD-03 episodic memory. */
+export interface KnownError {
+  pattern: string;
+  description: string;
+  fixSuggestion: string;
+}
+
+export interface ProjectContext {
+  projectName: string;
+  adrs: ADR[];
+  rules: string[];
+}
