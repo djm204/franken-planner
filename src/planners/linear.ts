@@ -1,13 +1,24 @@
-import type { PlanResult, PlanningStrategyName } from '../core/types';
+import type { PlanResult, PlanningStrategyName, TaskResult } from '../core/types';
 import type { PlanGraph } from '../core/dag';
 import type { PlanContext, PlanningStrategy } from './types';
 
-// Stub — always returns completed with no results. Tests will fail (RED).
-// Failure handling added in a subsequent commit.
 export class LinearPlanner implements PlanningStrategy {
   readonly name: PlanningStrategyName = 'linear';
 
-  async execute(_graph: PlanGraph, _context: PlanContext): Promise<PlanResult> {
-    return { status: 'completed', taskResults: [] };
+  /**
+   * Executes tasks one-by-one in topological order.
+   * Returns 'completed' when all tasks succeed.
+   * Failure handling added in next commit.
+   */
+  async execute(graph: PlanGraph, context: PlanContext): Promise<PlanResult> {
+    const tasks = graph.topoSort();
+    const taskResults: TaskResult[] = [];
+
+    for (const task of tasks) {
+      const result = await context.executor(task);
+      taskResults.push(result);
+    }
+
+    return { status: 'completed', taskResults };
   }
 }
