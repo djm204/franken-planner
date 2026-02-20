@@ -1,9 +1,19 @@
+import { MaxRecoveryAttemptsError, UnknownErrorEscalatedError } from '../core/errors';
 import type { TaskId } from '../core/types';
 import type { PlanGraph } from '../core/dag';
 import type { MemoryModule } from '../modules/mod03';
 import { ErrorIngester } from './error-ingester';
 import { RecoveryPlanGenerator } from './recovery-plan-generator';
 
+/**
+ * Orchestrates the self-correction loop (ADR-007).
+ *
+ * On each failure:
+ *   1. Checks attempt against maxAttempts — throws MaxRecoveryAttemptsError if exceeded.
+ *   2. Fetches known errors from MOD-03 and classifies the error via ErrorIngester.
+ *   3. Known error → injects fix-it task via RecoveryPlanGenerator; returns new PlanGraph.
+ *   4. Unknown error → throws UnknownErrorEscalatedError (→ HITL gate in PR-08/09).
+ */
 export class RecoveryController {
   constructor(
     private readonly memory: MemoryModule,
@@ -12,12 +22,18 @@ export class RecoveryController {
     private readonly maxAttempts = 3
   ) {}
 
-  // stub — always returns graph unchanged
-  async recover(_failedTaskId: TaskId, _error: Error, graph: PlanGraph, _attempt: number): Promise<PlanGraph> {
-    void this.memory;
-    void this.errorIngester;
-    void this.planGenerator;
-    void this.maxAttempts;
-    return graph;
+  async recover(failedTaskId: TaskId, error: Error, graph: PlanGraph, attempt: number): Promise<PlanGraph> {
+    if (attempt > this.maxAttempts) {
+      throw new MaxRecoveryAttemptsError(failedTaskId, this.maxAttempts);
+    }
+
+    const knownErrors = await this.memory.getKnownErrors();
+    const classification = this.errorIngester.classify(error, knownErrors);
+
+    if (classification.type === 'unknown') {
+      throw new UnknownErrorEscalatedError(failedTaskId, error);
+    }
+
+    return this.planGenerator.generate(failedTaskId, classification.knownError, graph, attempt);
   }
 }
