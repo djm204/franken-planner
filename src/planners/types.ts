@@ -1,4 +1,4 @@
-import type { Task, TaskResult, PlanResult, PlanningStrategyName } from '../core/types';
+import type { Task, TaskResult, PlanResult, PlanningStrategyName, Intent } from '../core/types';
 import type { PlanGraph } from '../core/dag';
 
 /**
@@ -22,4 +22,12 @@ export interface PlanContext {
 export interface PlanningStrategy {
   readonly name: PlanningStrategyName;
   execute(graph: PlanGraph, context: PlanContext): Promise<PlanResult>;
+}
+
+/**
+ * Converts a sanitized Intent into an executable PlanGraph.
+ * Injected into the Planner orchestrator (ADR-005).
+ */
+export interface GraphBuilder {
+  build(intent: Intent): Promise<PlanGraph>;
 }
