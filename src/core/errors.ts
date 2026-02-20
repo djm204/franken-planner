@@ -40,3 +40,25 @@ export class RationaleRejectedError extends Error {
     Object.setPrototypeOf(this, RationaleRejectedError.prototype);
   }
 }
+
+export class MaxRecoveryAttemptsError extends Error {
+  constructor(
+    public readonly taskId: string,
+    public readonly maxAttempts: number
+  ) {
+    super(`Max recovery attempts (${maxAttempts}) exceeded for task '${taskId}'`);
+    this.name = 'MaxRecoveryAttemptsError';
+    Object.setPrototypeOf(this, MaxRecoveryAttemptsError.prototype);
+  }
+}
+
+export class UnknownErrorEscalatedError extends Error {
+  constructor(
+    public readonly taskId: string,
+    public readonly originalError: Error
+  ) {
+    super(`Unknown error in task '${taskId}' escalated to HITL: ${originalError.message}`);
+    this.name = 'UnknownErrorEscalatedError';
+    Object.setPrototypeOf(this, UnknownErrorEscalatedError.prototype);
+  }
+}
