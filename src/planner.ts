@@ -1,3 +1,12 @@
+import { applyModifications } from './hitl/plan-modifier';
+import { PlanExporter } from './hitl/plan-exporter';
+import { buildCoTExecutor } from './cot/cot-gate';
+import {
+  RationaleRejectedError,
+  MaxRecoveryAttemptsError,
+  UnknownErrorEscalatedError,
+} from './core/errors';
+import { createTaskId } from './core/types';
 import type { PlanResult, TaskId } from './core/types';
 import type { PlanGraph } from './core/dag';
 import type { GuardrailsModule } from './modules/mod01';
@@ -10,7 +19,19 @@ interface Recovery {
   recover(failedTaskId: TaskId, error: Error, graph: PlanGraph, attempt: number): Promise<PlanGraph>;
 }
 
+/**
+ * Top-level Planner orchestrator (ADR-004, ADR-005).
+ *
+ * Execution flow:
+ *   1. Sanitize rawInput → Intent via GuardrailsModule (MOD-01)
+ *   2. Build PlanGraph from Intent via GraphBuilder
+ *   3. Export to Markdown and gate on HITL approval
+ *   4. Execute via injected PlanningStrategy (optionally wrapped with CoT gate)
+ *   5. On failure: attempt self-correction via Recovery; abort after max attempts
+ */
 export class Planner {
+  private readonly planExporter = new PlanExporter();
+
   constructor(
     private readonly guardrails: GuardrailsModule,
     private readonly graphBuilder: GraphBuilder,
@@ -21,15 +42,65 @@ export class Planner {
     private readonly selfCritique?: SelfCritiqueModule
   ) {}
 
-  // stub — always returns completed
-  async plan(_rawInput: string): Promise<PlanResult> {
-    void this.guardrails;
-    void this.graphBuilder;
-    void this.executor;
-    void this.hitlGate;
-    void this.strategy;
-    void this.recovery;
-    void this.selfCritique;
-    return { status: 'completed', taskResults: [] };
+  async plan(rawInput: string): Promise<PlanResult> {
+    // 1. Sanitize via MOD-01
+    const intent = await this.guardrails.getSanitizedIntent(rawInput);
+
+    // 2. Build task graph
+    let graph = await this.graphBuilder.build(intent);
+
+    // 3. HITL approval gate
+    const markdown = this.planExporter.toMarkdown(graph);
+    const approval = await this.hitlGate.requestApproval(markdown);
+
+    if (approval.decision === 'aborted') {
+      return { status: 'aborted', reason: approval.reason };
+    }
+    if (approval.decision === 'modified') {
+      graph = applyModifications(graph, approval.changes);
+    }
+
+    // 4. Optionally wrap executor with CoT gate (MOD-07)
+    const executor: TaskExecutor = this.selfCritique
+      ? buildCoTExecutor(this.executor, this.selfCritique)
+      : this.executor;
+
+    // 5. Execute with self-correction loop (ADR-007)
+    let currentGraph = graph;
+    let attempt = 1;
+
+    for (;;) {
+      let result: PlanResult;
+      try {
+        result = await this.strategy.execute(currentGraph, { executor });
+      } catch (err) {
+        if (err instanceof RationaleRejectedError) {
+          return { status: 'rationale_rejected', taskId: createTaskId(err.taskId) };
+        }
+        throw err;
+      }
+
+      if (result.status === 'completed') return result;
+      if (result.status !== 'failed') return result; // defensive: unexpected status
+
+      // result.status === 'failed' — attempt recovery
+      try {
+        currentGraph = await this.recovery.recover(
+          result.failedTaskId,
+          result.error,
+          currentGraph,
+          attempt
+        );
+        attempt++;
+      } catch (recoveryErr) {
+        if (
+          recoveryErr instanceof MaxRecoveryAttemptsError ||
+          recoveryErr instanceof UnknownErrorEscalatedError
+        ) {
+          return result;
+        }
+        throw recoveryErr;
+      }
+    }
   }
 }
