@@ -1,14 +1,9 @@
 // =============================================================================
-// Task Domain
+// Task Domain (shared types re-exported from @franken/types)
 // =============================================================================
 
-/** Branded string type for type-safe task identifiers. */
-export type TaskId = string & { readonly __brand: 'TaskId' };
-
-/** Creates a TaskId from a plain string. Use at system boundaries only. */
-export function createTaskId(id: string): TaskId {
-  return id as TaskId;
-}
+export type { TaskId } from '@franken/types';
+export { createTaskId } from '@franken/types';
 
 export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'failed' | 'skipped';
 
@@ -74,21 +69,10 @@ export interface Intent {
 }
 
 // =============================================================================
-// Chain-of-Thought (CoT)
+// Chain-of-Thought (CoT) — re-exported from @franken/types
 // =============================================================================
 
-/** Rationale block emitted before every task dispatch, verified by MOD-07. */
-export interface RationaleBlock {
-  taskId: TaskId;
-  reasoning: string;
-  selectedTool?: string;
-  expectedOutcome: string;
-  timestamp: Date;
-}
-
-export type VerificationResult =
-  | { verdict: 'approved' }
-  | { verdict: 'rejected'; reason: string };
+export type { RationaleBlock, VerificationResult } from '@franken/types';
 
 // =============================================================================
 // Memory types (MOD-03 Semantic & Episodic Memory)
