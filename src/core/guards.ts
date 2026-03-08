@@ -1,4 +1,4 @@
-import type { Task, Intent, TaskStatus, PlanningStrategyName } from './types';
+import type { Task, Intent, TaskStatus, PlanningStrategyName } from './types.js';
 
 const VALID_STATUSES: ReadonlySet<string> = new Set<TaskStatus>([
   'pending',

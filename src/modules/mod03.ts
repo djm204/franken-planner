@@ -1,4 +1,4 @@
-import type { ADR, KnownError, ProjectContext } from '../core/types';
+import type { ADR, KnownError, ProjectContext } from '../core/types.js';
 
 /**
  * MOD-03: Episodic & Semantic Memory

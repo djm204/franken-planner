@@ -2,7 +2,8 @@
 // Task Domain (shared types re-exported from @franken/types)
 // =============================================================================
 
-export type { TaskId } from '@franken/types';
+import type { TaskId } from '@franken/types';
+export type { TaskId };
 export { createTaskId } from '@franken/types';
 
 export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'failed' | 'skipped';

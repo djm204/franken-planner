@@ -1,18 +1,18 @@
-import { applyModifications } from './hitl/plan-modifier';
-import { PlanExporter } from './hitl/plan-exporter';
-import { buildCoTExecutor } from './cot/cot-gate';
+import { applyModifications } from './hitl/plan-modifier.js';
+import { PlanExporter } from './hitl/plan-exporter.js';
+import { buildCoTExecutor } from './cot/cot-gate.js';
 import {
   RationaleRejectedError,
   MaxRecoveryAttemptsError,
   UnknownErrorEscalatedError,
-} from './core/errors';
-import { createTaskId } from './core/types';
-import type { PlanResult, TaskId } from './core/types';
-import type { PlanGraph } from './core/dag';
-import type { GuardrailsModule } from './modules/mod01';
-import type { SelfCritiqueModule } from './modules/mod07';
-import type { HITLGate } from './hitl/types';
-import type { PlanningStrategy, TaskExecutor, GraphBuilder } from './planners/types';
+} from './core/errors.js';
+import { createTaskId } from './core/types.js';
+import type { PlanResult, TaskId } from './core/types.js';
+import type { PlanGraph } from './core/dag.js';
+import type { GuardrailsModule } from './modules/mod01.js';
+import type { SelfCritiqueModule } from './modules/mod07.js';
+import type { HITLGate } from './hitl/types.js';
+import type { PlanningStrategy, TaskExecutor, GraphBuilder } from './planners/types.js';
 
 /** Minimal recovery interface satisfied by RecoveryController (ADR-005). */
 interface Recovery {

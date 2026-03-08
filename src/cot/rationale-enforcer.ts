@@ -1,4 +1,4 @@
-import type { Task, RationaleBlock } from '../core/types';
+import type { Task, RationaleBlock } from '../core/types.js';
 
 /**
  * Generates a RationaleBlock from a Task.

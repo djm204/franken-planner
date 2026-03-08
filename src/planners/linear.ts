@@ -1,6 +1,6 @@
-import type { PlanResult, PlanningStrategyName, TaskResult } from '../core/types';
-import type { PlanGraph } from '../core/dag';
-import type { PlanContext, PlanningStrategy } from './types';
+import type { PlanResult, PlanningStrategyName, TaskResult } from '../core/types.js';
+import type { PlanGraph } from '../core/dag.js';
+import type { PlanContext, PlanningStrategy } from './types.js';
 
 export class LinearPlanner implements PlanningStrategy {
   readonly name: PlanningStrategyName = 'linear';

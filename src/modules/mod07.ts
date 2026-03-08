@@ -1,4 +1,4 @@
-import type { RationaleBlock, VerificationResult } from '../core/types';
+import type { RationaleBlock, VerificationResult } from '../core/types.js';
 
 /**
  * MOD-07: Self-Critique

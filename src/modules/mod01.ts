@@ -1,4 +1,4 @@
-import type { Intent } from '../core/types';
+import type { Intent } from '../core/types.js';
 
 /**
  * MOD-01: Guardrails

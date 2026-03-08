@@ -1,7 +1,7 @@
-import { RationaleRejectedError } from '../core/errors';
-import type { TaskExecutor } from '../planners/types';
-import type { SelfCritiqueModule } from '../modules/mod07';
-import { RationaleEnforcer } from './rationale-enforcer';
+import { RationaleRejectedError } from '../core/errors.js';
+import type { TaskExecutor } from '../planners/types.js';
+import type { SelfCritiqueModule } from '../modules/mod07.js';
+import { RationaleEnforcer } from './rationale-enforcer.js';
 
 /**
  * Wraps a TaskExecutor with a Chain-of-Thought gate (ADR-004 CoT enforcement).

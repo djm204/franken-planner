@@ -1,6 +1,6 @@
-import type { PlanResult, TaskId, TaskResult } from '../core/types';
-import type { PlanGraph } from '../core/dag';
-import type { PlanContext, PlanningStrategy } from './types';
+import type { PlanResult, TaskId, TaskResult } from '../core/types.js';
+import type { PlanGraph } from '../core/dag.js';
+import type { PlanContext, PlanningStrategy } from './types.js';
 
 /**
  * Executes tasks in concurrent waves.

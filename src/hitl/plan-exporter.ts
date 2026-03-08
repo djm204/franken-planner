@@ -1,4 +1,4 @@
-import type { PlanGraph } from '../core/dag';
+import type { PlanGraph } from '../core/dag.js';
 
 /**
  * Renders a PlanGraph as a Markdown checklist for HITL review (ADR-006).

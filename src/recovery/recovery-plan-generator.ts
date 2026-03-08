@@ -1,6 +1,6 @@
-import { createTaskId } from '../core/types';
-import type { TaskId, KnownError } from '../core/types';
-import type { PlanGraph } from '../core/dag';
+import { createTaskId } from '../core/types.js';
+import type { TaskId, KnownError } from '../core/types.js';
+import type { PlanGraph } from '../core/dag.js';
 
 /**
  * Generates a recovery plan by injecting a fix-it task before the failed task.

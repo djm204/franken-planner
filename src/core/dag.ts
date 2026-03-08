@@ -1,5 +1,5 @@
-import type { Task, TaskId } from './types';
-import { CyclicDependencyError, DuplicateTaskError, TaskNotFoundError } from './errors';
+import type { Task, TaskId } from './types.js';
+import { CyclicDependencyError, DuplicateTaskError, TaskNotFoundError } from './errors.js';
 
 export type { CyclicDependencyError, DuplicateTaskError, TaskNotFoundError };
 

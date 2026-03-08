@@ -1,6 +1,6 @@
-import { PlanGraph } from '../core/dag';
-import type { Task } from '../core/types';
-import type { TaskModification } from './types';
+import { PlanGraph } from '../core/dag.js';
+import type { Task } from '../core/types.js';
+import type { TaskModification } from './types.js';
 
 /**
  * Applies a set of TaskModification changes to a PlanGraph and returns a new graph.

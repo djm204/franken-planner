@@ -1,9 +1,9 @@
-import { MaxRecoveryAttemptsError, UnknownErrorEscalatedError } from '../core/errors';
-import type { TaskId } from '../core/types';
-import type { PlanGraph } from '../core/dag';
-import type { MemoryModule } from '../modules/mod03';
-import { ErrorIngester } from './error-ingester';
-import { RecoveryPlanGenerator } from './recovery-plan-generator';
+import { MaxRecoveryAttemptsError, UnknownErrorEscalatedError } from '../core/errors.js';
+import type { TaskId } from '../core/types.js';
+import type { PlanGraph } from '../core/dag.js';
+import type { MemoryModule } from '../modules/mod03.js';
+import { ErrorIngester } from './error-ingester.js';
+import { RecoveryPlanGenerator } from './recovery-plan-generator.js';
 
 /**
  * Orchestrates the self-correction loop (ADR-007).

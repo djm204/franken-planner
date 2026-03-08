@@ -1,4 +1,4 @@
-import type { TaskId } from '../core/types';
+import type { TaskId } from '../core/types.js';
 
 /** A partial update to an existing task's mutable fields. */
 export interface TaskModification {

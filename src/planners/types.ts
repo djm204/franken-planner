@@ -1,5 +1,5 @@
-import type { Task, TaskResult, PlanResult, PlanningStrategyName, Intent } from '../core/types';
-import type { PlanGraph } from '../core/dag';
+import type { Task, TaskResult, PlanResult, PlanningStrategyName, Intent } from '../core/types.js';
+import type { PlanGraph } from '../core/dag.js';
 
 /**
  * Executes a single task and returns its result.

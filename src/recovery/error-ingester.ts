@@ -1,4 +1,4 @@
-import type { KnownError } from '../core/types';
+import type { KnownError } from '../core/types.js';
 
 export type ErrorClassification =
   | { type: 'known'; knownError: KnownError }

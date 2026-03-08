@@ -1,4 +1,4 @@
-import type { ApprovalResult, HITLGate } from './types';
+import type { ApprovalResult, HITLGate } from './types.js';
 
 // stub — always returns approved (configurable via constructor)
 export class StubHITLGate implements HITLGate {

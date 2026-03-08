@@ -1,7 +1,7 @@
-import { RecursionDepthExceededError } from '../core/errors';
-import { PlanGraph } from '../core/dag';
-import type { PlanResult, TaskResult, Task } from '../core/types';
-import type { PlanContext, PlanningStrategy } from './types';
+import { RecursionDepthExceededError } from '../core/errors.js';
+import { PlanGraph } from '../core/dag.js';
+import type { PlanResult, TaskResult, Task } from '../core/types.js';
+import type { PlanContext, PlanningStrategy } from './types.js';
 
 /**
  * Executes tasks in topological order.
